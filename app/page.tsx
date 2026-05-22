@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { translations } from "./translations";
 import Logo from "./components/Logo";
 import AnimatedText from "./components/AnimatedText";
@@ -17,6 +18,7 @@ export default function Home() {
   const [language, setLanguage] = useState<Language>("pt");
   const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
 
   useEffect(() => {
     const savedLang = localStorage.getItem("language") as Language | null;
@@ -32,6 +34,14 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedSkill(null);
+    };
+    if (selectedSkill) document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [selectedSkill]);
 
   const changeLanguage = (lang: Language) => {
     setLanguage(lang);
@@ -143,15 +153,14 @@ export default function Home() {
               staggerDelay={0.03}
               variant="slideIn"
             />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">
-              <AnimatedText
-                text="Pereira"
-                className="block"
-                delay={0.4}
-                staggerDelay={0.03}
-                variant="slideIn"
-              />
-            </span>
+            <motion.div
+              className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
+            >
+              Pereira
+            </motion.div>
           </h1>
 
           <h2 className="text-xl md:text-2xl text-zinc-300 font-medium mb-6">
@@ -242,15 +251,21 @@ export default function Home() {
             {t.skills.title}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {skills.map((skill, index) => (
-              <GlassmorphCard key={skill} glowIntensity="low" className="hover:scale-105 group">
-                <div className="text-center">
-                  <p className="text-purple-300 font-medium group-hover:text-cyan-300 transition-colors">
-                    {skill}
-                  </p>
-                  <div className="mt-2 h-1 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
-              </GlassmorphCard>
+            {skills.map((skill) => (
+              <button
+                key={skill}
+                onClick={() => setSelectedSkill(skill)}
+                className="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded-lg"
+              >
+                <GlassmorphCard glowIntensity="low" className="hover:scale-105 group cursor-pointer">
+                  <div className="text-center">
+                    <p className="text-purple-300 font-medium group-hover:text-cyan-300 transition-colors">
+                      {skill}
+                    </p>
+                    <div className="mt-2 h-1 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                </GlassmorphCard>
+              </button>
             ))}
           </div>
         </div>
@@ -384,6 +399,45 @@ export default function Home() {
           {t.footer.developed} <span className="text-purple-400">Sergio L. Pereira</span> · 2025
         </p>
       </footer>
+
+      {/* Skill Detail Modal */}
+      <AnimatePresence>
+        {selectedSkill && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center px-6"
+            onClick={() => setSelectedSkill(null)}
+          >
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 16 }}
+              transition={{ type: "spring", damping: 28, stiffness: 320 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative z-10 w-full max-w-md"
+            >
+              <GlassmorphCard glowIntensity="high">
+                <button
+                  onClick={() => setSelectedSkill(null)}
+                  className="absolute top-4 right-4 text-zinc-400 hover:text-white transition-colors text-lg leading-none"
+                  aria-label="Fechar"
+                >
+                  ✕
+                </button>
+                <p className="text-purple-400 font-mono text-xs mb-2">// skill.detail</p>
+                <h3 className="text-2xl font-bold text-white mb-4">{selectedSkill}</h3>
+                <p className="text-zinc-300 leading-relaxed pr-4">
+                  {(t.skills.details as Record<string, string>)[selectedSkill]}
+                </p>
+              </GlassmorphCard>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

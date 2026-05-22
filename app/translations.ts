@@ -9,7 +9,7 @@ export const translations = {
     hero: {
       greeting: "Olá, meu nome é",
       title: "Sergio L. Pereira",
-      role: "Desenvolvedor Front-end · Next.js / React",
+      role: "Desenvolvedor Front-end",
       description:
         "Criador de interfaces web de alta performance, focado em tecnologias modernas e na satisfação do usuário.",
       viewProjects: "Ver Projetos",
@@ -28,6 +28,16 @@ export const translations = {
     },
     skills: {
       title: "Habilidades",
+      details: {
+        JavaScript: "Utilizado em projetos como Pokodex, Cosmic Drift, Lista de Tarefas e Calculadora IMC — criando lógica interativa, manipulação do DOM e animações.",
+        TypeScript: "Linguagem principal deste portfólio, trazendo tipagem estática e maior segurança ao código React/Next.js.",
+        HTML5: "Base semântica de todos os projetos web, estruturando conteúdo com boas práticas de acessibilidade e SEO.",
+        CSS3: "Presente em todos os projetos para criar layouts responsivos, animações e interfaces modernas.",
+        React: "Utilizado no Pokodex para componentes reutilizáveis, gerenciamento de estado e interfaces dinâmicas baseadas em API.",
+        "Next.js": "Framework utilizado na construção deste portfólio, aproveitando SSR, roteamento por arquivos e otimização de performance.",
+        Git: "Controle de versão em todos os projetos, com gestão de branches, commits e histórico de desenvolvimento.",
+        GitHub: "Plataforma onde todos os repositórios estão hospedados, facilitando versionamento e portfólio público.",
+      },
     },
     projects: {
       title: "Projetos",
@@ -58,7 +68,7 @@ export const translations = {
     hero: {
       greeting: "Hi, my name is",
       title: "Sergio L. Pereira",
-      role: "Front-end Developer · Next.js / React",
+      role: "Front-end Developer",
       description:
         "Creator of high-performance web interfaces, focused on modern technologies and user satisfaction.",
       viewProjects: "View Projects",
@@ -77,6 +87,16 @@ export const translations = {
     },
     skills: {
       title: "Skills",
+      details: {
+        JavaScript: "Used in Pokodex, Cosmic Drift, Todo List, and BMI Calculator — creating interactive logic, DOM manipulation, and animations.",
+        TypeScript: "Main language of this portfolio, bringing static typing and greater safety to React/Next.js code.",
+        HTML5: "Semantic foundation of all web projects, structuring content with accessibility and SEO best practices.",
+        CSS3: "Present in all projects for responsive layouts, animations, and modern interfaces.",
+        React: "Used in Pokodex for reusable components, state management, and dynamic API-driven interfaces.",
+        "Next.js": "Framework used to build this portfolio, leveraging SSR, file-based routing, and performance optimization.",
+        Git: "Version control across all projects, managing branches, commits, and development history.",
+        GitHub: "Platform where all repositories are hosted, enabling public versioning and portfolio showcase.",
+      },
     },
     projects: {
       title: "Projects",
