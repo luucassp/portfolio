@@ -1,4 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌐 Portfólio — Sergio L. Pereira
+
+> Desenvolvedor Front-end · Criador de interfaces web de alta performance, focado em tecnologias modernas e na satisfação do usuário.
+
+🔗 **Deploy:** [portfolio-ashy-six-24.vercel.app](https://portfolio-ashy-six-24.vercel.app)
+
+---
+
+## ✨ Funcionalidades
+
+- Animação de digitação (typewriter) no nome da hero section
+- Logo com efeito hover suave e cursor interativo (`cursor: pointer`)
+- Botões com bordas arredondadas para uma UI mais amigável
+- Layout responsivo e moderno
+- Seções: Sobre · Habilidades · Projetos · Contato
+
+---
+
+## 🛠️ Tecnologias
+
+- **Next.js** (App Router)
+- **React**
+- **TypeScript**
+- **Tailwind CSS**
+- **Vercel** (deploy)
+
+---
+
+## 🐛 Correções Aplicadas
+
+| Problema | Causa | Solução |
+|---|---|---|
+| Logo sumia no hover | `overflow: hidden` cortando o efeito | Ajuste no container e `z-index` |
+| Cursor não mudava sobre a logo | Falta de `cursor: pointer` | Adicionado via Tailwind/CSS |
+| Nome aparecia de uma vez | Sem animação de entrada | Efeito typewriter com CSS/JS |
+| Botões com bordas retas | `border-radius` padrão | Aplicado `rounded-full` ou `rounded-xl` |
+
+---
+
+## 🚀 Como rodar localmente
+
+```bash
+# Clone o repositório
+git clone https://github.com/luucassp/portfolio.git
+cd portfolio
+
+# Instale as dependências
+npm install
+
+# Rode o servidor de desenvolvimento
+npm run dev
+```
+
+Acesse em: [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 📁 Estrutura do Projeto
+
+```
+portfolio/
+├── app/
+│   ├── page.tsx          # Página principal
+│   ├── globals.css       # Estilos globais
+│   └── components/
+│       ├── Logo.tsx      # Componente da logo
+│       ├── Hero.tsx      # Seção inicial com typewriter
+│       └── ...
+├── public/               # Assets estáticos
+└── README.md
+```
+
+---
+
+## 📬 Contato
+
+Feito com 💙 por **Sergio L. Pereira**
+
+[![GitHub](https://img.shields.io/badge/GitHub-luucassp-181717?style=flat&logo=github)](https://github.com/luucassp)This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
