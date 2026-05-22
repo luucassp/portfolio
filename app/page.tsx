@@ -9,20 +9,17 @@ import NeonButton from "./components/NeonButton";
 import GlassmorphCard from "./components/GlassmorphCard";
 import ParticleEffect from "./components/ParticleEffect";
 import SectionDivider from "./components/SectionDivider";
-import { useScrollAnimation } from "./components/hooks/useScrollAnimation";
-
 type Language = "pt" | "en";
 
 export default function Home() {
-  const [language, setLanguage] = useState<Language>("pt");
+  const [language, setLanguage] = useState<Language>(() => {
+    if (typeof window === "undefined") return "pt";
+    return (localStorage.getItem("language") as Language) || "pt";
+  });
   const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const savedLang = localStorage.getItem("language") as Language | null;
-    if (savedLang) {
-      setLanguage(savedLang);
-    }
     setMounted(true);
 
     const handleScroll = () => {
@@ -242,7 +239,7 @@ export default function Home() {
             {t.skills.title}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {skills.map((skill, index) => (
+            {skills.map((skill) => (
               <GlassmorphCard key={skill} glowIntensity="low" className="hover:scale-105 group">
                 <div className="text-center">
                   <p className="text-purple-300 font-medium group-hover:text-cyan-300 transition-colors">
