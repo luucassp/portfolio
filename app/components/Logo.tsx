@@ -35,6 +35,8 @@ export default function Logo({ size = "sm", onClick, className = "", showInitial
         fill
         className="object-contain"
         priority
+        quality={85}
+        sizes={isLarge ? "128px" : "48px"}
       />
     </button>
   );
