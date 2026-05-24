@@ -88,7 +88,7 @@ export default function NeonButton({
   const colors = colorMap[color];
 
   const baseClass = classNames(
-    "font-medium rounded-lg transition-all duration-300 cursor-pointer",
+    "font-medium rounded-2xl transition-all duration-300 cursor-pointer",
     "disabled:opacity-50 disabled:cursor-not-allowed",
     sizeMap[size],
     {

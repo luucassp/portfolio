@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { translations } from "./translations";
 import Logo from "./components/Logo";
-import AnimatedText from "./components/AnimatedText";
+import TypewriterText from "./components/TypewriterText";
 import GlowEffect from "./components/GlowEffect";
 import NeonButton from "./components/NeonButton";
 import GlassmorphCard from "./components/GlassmorphCard";
@@ -24,6 +24,9 @@ export default function Home() {
   const { ref: skillsRef, isVisible: skillsVisible } = useScrollAnimation({ threshold: 0.1 });
   const { ref: projectsRef, isVisible: projectsVisible } = useScrollAnimation({ threshold: 0.08 });
   const { ref: contactRef, isVisible: contactVisible } = useScrollAnimation({ threshold: 0.1 });
+  const [heroKey, setHeroKey] = useState(0);
+  const heroRef = useRef<HTMLElement>(null);
+  const heroWasHidden = useRef(false);
 
   useEffect(() => {
     const savedLang = localStorage.getItem("language") as Language | null;
@@ -36,8 +39,34 @@ export default function Home() {
       setIsScrolled(window.scrollY > 100);
     };
 
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedSkill(null);
+    };
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("keydown", handleKey);
+
+    // Reinicia a digitação ao voltar para o hero
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          heroWasHidden.current = true;
+        } else if (heroWasHidden.current) {
+          heroWasHidden.current = false;
+          setHeroKey((k) => k + 1);
+        }
+      },
+      { threshold: 0.4 }
+    );
+
+    const el = heroRef.current;
+    if (el) observer.observe(el);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("keydown", handleKey);
+      if (el) observer.unobserve(el);
+    };
   }, []);
 
   useEffect(() => {
@@ -149,7 +178,7 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 pt-20 overflow-hidden">
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center px-6 pt-20 overflow-hidden">
         {/* Particle Effect Background */}
         <ParticleEffect count={30} color="purple" speed="slow" size="small" className="absolute inset-0" />
 
@@ -165,20 +194,15 @@ export default function Home() {
           </p>
 
           <h1 className="text-5xl md:text-7xl font-bold mb-4 leading-tight">
-            <AnimatedText
-              text="Sergio L."
-              className="block"
-              staggerDelay={0.03}
-              variant="slideIn"
+            <TypewriterText
+              key={heroKey}
+              lines={[
+                { text: "Sergio L." },
+                { text: "Pereira", className: "text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-cyan-400" },
+              ]}
+              speed={70}
+              startDelay={400}
             />
-            <motion.div
-              className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
-            >
-              Pereira
-            </motion.div>
           </h1>
 
           <h2 className="text-xl md:text-2xl text-zinc-300 font-medium mb-6">
@@ -406,7 +430,7 @@ export default function Home() {
                 href="mailto:sergio.lucas.ferrari@gmail.com"
                 className="inline-block px-8 py-4 bg-purple-600 hover:bg-purple-500 rounded-lg font-medium transition-colors"
               >
-                sergio.lucas.ferrari@gmail.com
+                sergio.lucas.ferrari360@gmail.com
               </a>
             </GlowEffect>
           </div>
@@ -471,9 +495,10 @@ export default function Home() {
                 >
                   ✕
                 </button>
-                <p className="text-purple-400 font-mono text-xs mb-2">// skill.detail</p>
+                <p className="text-purple-400 font-mono text-xs mb-2">{'// skill.detail'}</p>
                 <h3 className="text-2xl font-bold text-white mb-4">{selectedSkill}</h3>
-                <p className="text-zinc-300 leading-relaxed pr-4">
+                <div className="h-px bg-gradient-to-r from-purple-500/50 to-cyan-500/50 mb-4" />
+                <p className="text-zinc-300 leading-relaxed text-sm pr-4">
                   {(t.skills.details as Record<string, string>)[selectedSkill]}
                 </p>
               </GlassmorphCard>
