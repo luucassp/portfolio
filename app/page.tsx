@@ -290,7 +290,9 @@ export default function Home() {
                     <p className="text-purple-300 font-medium group-hover:text-cyan-300 transition-colors">
                       {skill}
                     </p>
-                    <div className="mt-2 h-1 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <p className="text-zinc-600 text-xs mt-2 group-hover:text-zinc-400 transition-colors">
+                      {t.skills.clickHint}
+                    </p>
                   </div>
                 </GlassmorphCard>
               </button>

@@ -28,6 +28,7 @@ export const translations = {
     },
     skills: {
       title: "Habilidades",
+      clickHint: "clique para saber mais",
       details: {
         JavaScript: "Utilizado em projetos como Pokodex, Cosmic Drift, Lista de Tarefas e Calculadora IMC — criando lógica interativa, manipulação do DOM e animações.",
         TypeScript: "Linguagem principal deste portfólio, trazendo tipagem estática e maior segurança ao código React/Next.js.",
@@ -87,6 +88,7 @@ export const translations = {
     },
     skills: {
       title: "Skills",
+      clickHint: "click to learn more",
       details: {
         JavaScript: "Used in Pokodex, Cosmic Drift, Todo List, and BMI Calculator — creating interactive logic, DOM manipulation, and animations.",
         TypeScript: "Main language of this portfolio, bringing static typing and greater safety to React/Next.js code.",
