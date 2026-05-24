@@ -5,6 +5,7 @@ export const translations = {
       habilidades: "Habilidades",
       projetos: "Projetos",
       contato: "Contato",
+      downloadCV: "Baixar CV",
     },
     hero: {
       greeting: "Olá, meu nome é",
@@ -47,6 +48,8 @@ export const translations = {
       todoList: "Aplicativo de lista de afazeres para organização do dia a dia.",
       imc: "Calculadora de Índice de Massa Corporal com interface simples e intuitiva.",
       viewAll: "Ver todos os projetos no GitHub →",
+      viewDemo: "Ver Demo",
+      viewGithub: "GitHub",
     },
     contact: {
       title: "Contato",
@@ -65,6 +68,7 @@ export const translations = {
       habilidades: "Skills",
       projetos: "Projects",
       contato: "Contact",
+      downloadCV: "Download CV",
     },
     hero: {
       greeting: "Hi, my name is",
@@ -107,6 +111,8 @@ export const translations = {
       todoList: "Todo list application for organizing daily tasks.",
       imc: "Body Mass Index calculator with simple and intuitive interface.",
       viewAll: "View all projects on GitHub →",
+      viewDemo: "Live Demo",
+      viewGithub: "GitHub",
     },
     contact: {
       title: "Contact",

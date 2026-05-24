@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { translations } from "./translations";
 import Logo from "./components/Logo";
@@ -16,9 +16,9 @@ type Language = "pt" | "en";
 
 export default function Home() {
   const [language, setLanguage] = useState<Language>("pt");
-  const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const { ref: aboutRef, isVisible: aboutVisible } = useScrollAnimation({ threshold: 0.1 });
   const { ref: skillsRef, isVisible: skillsVisible } = useScrollAnimation({ threshold: 0.1 });
@@ -33,18 +33,18 @@ export default function Home() {
     if (savedLang) {
       setLanguage(savedLang);
     }
-    setMounted(true);
 
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 100);
+      setIsMobileMenuOpen(false);
     };
 
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSelectedSkill(null);
+    const handleResize = () => {
+      if (window.innerWidth >= 640) setIsMobileMenuOpen(false);
     };
 
     window.addEventListener("scroll", handleScroll);
-    window.addEventListener("keydown", handleKey);
+    window.addEventListener("resize", handleResize);
 
     // Reinicia a digitação ao voltar para o hero
     const observer = new IntersectionObserver(
@@ -64,7 +64,7 @@ export default function Home() {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("keydown", handleKey);
+      window.removeEventListener("resize", handleResize);
       if (el) observer.unobserve(el);
     };
   }, []);
@@ -86,9 +86,12 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (!mounted) return null;
-
   const t = translations[language];
+
+  const typewriterLines = useMemo(() => [
+    { text: "Sergio L." },
+    { text: "Pereira", className: "text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-cyan-400" },
+  ], []);
 
   const skills = ["JavaScript", "TypeScript", "HTML5", "CSS3", "React", "Next.js", "Git", "GitHub"];
 
@@ -106,6 +109,7 @@ export default function Home() {
       name: "Pokodex",
       description: t.projects.pokodex,
       url: "https://github.com/luucassp/Pokodex",
+      demo: "",
       tags: ["React", "JavaScript", "CSS"],
       accent: "from-cyan-500 to-purple-500",
     },
@@ -113,6 +117,7 @@ export default function Home() {
       name: "Cosmic Drift",
       description: t.projects.cosmicDrift,
       url: "https://github.com/luucassp/cosmic-drift-",
+      demo: "https://cosmic-drift-three.vercel.app",
       tags: ["JavaScript", "CSS"],
       accent: "from-yellow-500 to-pink-500",
     },
@@ -120,6 +125,7 @@ export default function Home() {
       name: language === "pt" ? "Lista de Tarefas" : "Todo List",
       description: t.projects.todoList,
       url: "https://github.com/luucassp/lista-de-afazer",
+      demo: "",
       tags: ["HTML", "CSS", "JavaScript"],
       accent: "from-orange-500 to-yellow-500",
     },
@@ -127,6 +133,7 @@ export default function Home() {
       name: language === "pt" ? "Calculadora IMC" : "BMI Calculator",
       description: t.projects.imc,
       url: "https://github.com/luucassp/IMC",
+      demo: "",
       tags: ["HTML", "CSS", "JavaScript"],
       accent: "from-green-500 to-cyan-500",
     },
@@ -138,43 +145,107 @@ export default function Home() {
       <nav className="fixed top-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-zinc-800">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
           <Logo size="sm" onClick={scrollToHero} showInitials={isScrolled} />
+
+          {/* Desktop links */}
           <div className="hidden sm:flex gap-8 text-sm text-zinc-400 items-center">
-            <a href="#sobre" className="hover:text-purple-400 transition-colors">
-              {t.nav.sobre}
-            </a>
-            <a href="#habilidades" className="hover:text-purple-400 transition-colors">
-              {t.nav.habilidades}
-            </a>
-            <a href="#projetos" className="hover:text-purple-400 transition-colors">
-              {t.nav.projetos}
-            </a>
-            <a href="#contato" className="hover:text-purple-400 transition-colors">
-              {t.nav.contato}
-            </a>
-            <div className="flex gap-2 ml-4 pl-4 border-l border-zinc-700">
+            <a href="#sobre" className="hover:text-purple-400 transition-colors">{t.nav.sobre}</a>
+            <a href="#habilidades" className="hover:text-purple-400 transition-colors">{t.nav.habilidades}</a>
+            <a href="#projetos" className="hover:text-purple-400 transition-colors">{t.nav.projetos}</a>
+            <a href="#contato" className="hover:text-purple-400 transition-colors">{t.nav.contato}</a>
+            <div className="flex gap-2 ml-4 pl-4 border-l border-zinc-700 items-center">
               <button
                 onClick={() => changeLanguage("pt")}
-                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                  language === "pt"
-                    ? "bg-purple-600 text-white"
-                    : "text-zinc-500 hover:text-zinc-300"
-                }`}
-              >
-                PT
-              </button>
+                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${language === "pt" ? "bg-purple-600 text-white" : "text-zinc-500 hover:text-zinc-300"}`}
+              >PT</button>
               <button
                 onClick={() => changeLanguage("en")}
-                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                  language === "en"
-                    ? "bg-purple-600 text-white"
-                    : "text-zinc-500 hover:text-zinc-300"
-                }`}
+                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${language === "en" ? "bg-purple-600 text-white" : "text-zinc-500 hover:text-zinc-300"}`}
+              >EN</button>
+              <a
+                href="/cv.pdf"
+                download
+                className="ml-2 flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-purple-500/50 text-purple-400 rounded-lg hover:bg-purple-500/10 hover:border-purple-400 transition-all"
               >
-                EN
-              </button>
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                {t.nav.downloadCV}
+              </a>
             </div>
           </div>
+
+          {/* Hamburger button — mobile only */}
+          <button
+            className="sm:hidden p-2 text-zinc-400 hover:text-white transition-colors rounded-lg"
+            onClick={() => setIsMobileMenuOpen((v) => !v)}
+            aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+            aria-expanded={isMobileMenuOpen}
+          >
+            {isMobileMenuOpen ? (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
         </div>
+
+        {/* Mobile menu panel */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.22, ease: "easeInOut" }}
+              className="sm:hidden overflow-hidden border-t border-zinc-800 bg-[#0a0a0a]/95 backdrop-blur-md"
+            >
+              <div className="px-6 py-4 flex flex-col gap-0">
+                {[
+                  { href: "#sobre", label: t.nav.sobre },
+                  { href: "#habilidades", label: t.nav.habilidades },
+                  { href: "#projetos", label: t.nav.projetos },
+                  { href: "#contato", label: t.nav.contato },
+                ].map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="py-3 text-zinc-300 hover:text-purple-400 transition-colors border-b border-zinc-800/60 text-sm"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+                <div className="pt-4 flex items-center justify-between">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => { changeLanguage("pt"); setIsMobileMenuOpen(false); }}
+                      className={`px-3 py-1 rounded text-xs font-medium transition-colors ${language === "pt" ? "bg-purple-600 text-white" : "text-zinc-500 hover:text-zinc-300"}`}
+                    >PT</button>
+                    <button
+                      onClick={() => { changeLanguage("en"); setIsMobileMenuOpen(false); }}
+                      className={`px-3 py-1 rounded text-xs font-medium transition-colors ${language === "en" ? "bg-purple-600 text-white" : "text-zinc-500 hover:text-zinc-300"}`}
+                    >EN</button>
+                  </div>
+                  <a
+                    href="/cv.pdf"
+                    download
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    {t.nav.downloadCV}
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* Hero */}
@@ -196,10 +267,7 @@ export default function Home() {
           <h1 className="text-5xl md:text-7xl font-bold mb-4 leading-tight">
             <TypewriterText
               key={heroKey}
-              lines={[
-                { text: "Sergio L." },
-                { text: "Pereira", className: "text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-cyan-400" },
-              ]}
+              lines={typewriterLines}
               speed={70}
               startDelay={400}
             />
@@ -214,21 +282,19 @@ export default function Home() {
           </p>
 
           <div className="flex gap-4 justify-center flex-wrap">
-            <NeonButton
-              variant="primary"
-              color="purple"
-              size="md"
-              href="#projetos"
-            >
+            <NeonButton variant="primary" color="purple" size="md" href="#projetos">
               {t.hero.viewProjects}
             </NeonButton>
-            <NeonButton
-              variant="secondary"
-              color="cyan"
-              size="md"
-              href="#contato"
-            >
+            <NeonButton variant="secondary" color="cyan" size="md" href="#contato">
               {t.hero.contact}
+            </NeonButton>
+            <NeonButton variant="ghost" color="purple" size="md" href="/cv.pdf" download>
+              <span className="flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                {t.nav.downloadCV}
+              </span>
             </NeonButton>
           </div>
         </div>
@@ -341,44 +407,24 @@ export default function Home() {
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             {projects.map((project, index) => (
-              <a
-                key={project.name}
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group block"
-              >
-                <GlassmorphCard glowIntensity="medium" className="h-full hover:-translate-y-2 cursor-pointer overflow-hidden">
-                  {/* Accent strip bleeds to card edges via negative margin */}
+              <div key={project.name} className="group">
+                <GlassmorphCard glowIntensity="medium" className="h-full hover:-translate-y-2 overflow-hidden flex flex-col">
                   <div className={`-mx-6 -mt-6 mb-5 h-[3px] bg-gradient-to-r ${project.accent}`} />
 
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex items-center gap-3">
-                      <span className="text-zinc-500 font-mono text-xs font-bold">
-                        {String(index + 1).padStart(2, "0")}.
-                      </span>
-                      <h3 className="text-lg font-semibold group-hover:text-purple-400 transition-colors">
-                        {project.name}
-                      </h3>
-                    </div>
-                    <svg
-                      className="w-4 h-4 text-zinc-600 group-hover:text-purple-400 transition-colors flex-shrink-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                      />
-                    </svg>
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-zinc-500 font-mono text-xs font-bold">
+                      {String(index + 1).padStart(2, "0")}.
+                    </span>
+                    <h3 className="text-lg font-semibold group-hover:text-purple-400 transition-colors">
+                      {project.name}
+                    </h3>
                   </div>
-                  <p className="text-zinc-400 text-sm mb-6 leading-relaxed group-hover:text-zinc-200 transition-colors">
+
+                  <p className="text-zinc-400 text-sm leading-relaxed group-hover:text-zinc-200 transition-colors flex-1 mb-5">
                     {project.description}
                   </p>
-                  <div className="flex gap-2 flex-wrap">
+
+                  <div className="flex gap-2 flex-wrap mb-5">
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
@@ -390,8 +436,35 @@ export default function Home() {
                       </span>
                     ))}
                   </div>
+
+                  <div className="flex gap-2 pt-4 border-t border-zinc-800/50">
+                    {project.demo && (
+                      <a
+                        href={project.demo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-colors"
+                      >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        {t.projects.viewDemo}
+                      </a>
+                    )}
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-zinc-700/60 text-zinc-400 hover:text-white hover:border-zinc-500 rounded-lg transition-colors"
+                    >
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.37.6.1.82-.26.82-.57v-2c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.68.82.57C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z" />
+                      </svg>
+                      {t.projects.viewGithub}
+                    </a>
+                  </div>
                 </GlassmorphCard>
-              </a>
+              </div>
             ))}
           </div>
           <div className="text-center mt-12">

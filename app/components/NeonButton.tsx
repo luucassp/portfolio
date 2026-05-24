@@ -9,6 +9,7 @@ interface NeonButtonProps {
   className?: string;
   onClick?: () => void;
   href?: string;
+  download?: boolean;
   disabled?: boolean;
   animated?: boolean;
 }
@@ -41,6 +42,7 @@ export default function NeonButton({
   className = "",
   onClick,
   href,
+  download = false,
   disabled = false,
   animated = false,
 }: NeonButtonProps) {
@@ -133,7 +135,7 @@ export default function NeonButton({
 
   if (href) {
     return (
-      <a href={href} className={buttonClass}>
+      <a href={href} className={buttonClass} download={download || undefined}>
         {children}
       </a>
     );
