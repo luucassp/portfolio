@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import CyberpunkBackground from "./components/CyberpunkBackground";
+import SpaceBackground from "./components/SpaceBackground";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,11 +28,8 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#0a0a0a] text-white">
-        {/* Cyberpunk Background (atrás de tudo) */}
-        <CyberpunkBackground />
-
-        {/* Conteúdo da página */}
+      <body className="min-h-full flex flex-col text-white">
+        <SpaceBackground />
         <div className="relative z-10">
           {children}
         </div>

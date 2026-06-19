@@ -8,8 +8,6 @@ import AnimatedText from "./components/AnimatedText";
 import GlowEffect from "./components/GlowEffect";
 import NeonButton from "./components/NeonButton";
 import GlassmorphCard from "./components/GlassmorphCard";
-import ParticleEffect from "./components/ParticleEffect";
-import SectionDivider from "./components/SectionDivider";
 import { useScrollAnimation } from "./components/hooks/useScrollAnimation";
 
 type Language = "pt" | "en";
@@ -104,9 +102,9 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white scroll-smooth">
+    <div className="min-h-screen text-white scroll-smooth">
       {/* Navbar */}
-      <nav className="fixed top-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-zinc-800">
+      <nav className="fixed top-0 w-full z-50 bg-black/40 backdrop-blur-md border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
           <Logo size="sm" onClick={scrollToHero} showInitials={isScrolled} />
           <div className="hidden sm:flex gap-8 text-sm text-zinc-400 items-center">
@@ -150,9 +148,6 @@ export default function Home() {
 
       {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center px-6 pt-20 overflow-hidden">
-        {/* Particle Effect Background */}
-        <ParticleEffect count={30} color="purple" speed="slow" size="small" className="absolute inset-0" />
-
         <div className="max-w-3xl text-center relative z-10">
           <div className="mb-12 flex justify-center">
             <GlowEffect color="purple" intensity="high" animated>
@@ -210,8 +205,6 @@ export default function Home() {
         </div>
       </section>
 
-      <SectionDivider variant="circuit" />
-
       {/* Sobre */}
       <section id="sobre" className="py-24 px-6">
         <div
@@ -264,8 +257,6 @@ export default function Home() {
         </div>
       </section>
 
-      <SectionDivider variant="gradient" />
-
       {/* Habilidades */}
       <section id="habilidades" className="py-24 px-6">
         <div
@@ -300,8 +291,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <SectionDivider variant="circuit" />
 
       {/* Projetos */}
       <section id="projetos" className="py-24 px-6">
@@ -382,12 +371,8 @@ export default function Home() {
         </div>
       </section>
 
-      <SectionDivider variant="gradient" />
-
       {/* Contato */}
       <section id="contato" className="py-24 px-6 relative overflow-hidden">
-        <ParticleEffect count={20} color="cyan" speed="slow" size="small" className="absolute inset-0" />
-
         <div
           ref={contactRef}
           className={`max-w-2xl mx-auto text-center relative z-10 transition-all duration-700 ease-out ${
@@ -437,7 +422,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 text-center text-zinc-600 text-sm border-t border-zinc-900">
+      <footer className="py-8 text-center text-zinc-500 text-sm border-t border-white/5">
         <p>
           {t.footer.developed} <span className="text-purple-400">Sergio L. Pereira</span> · 2025
         </p>
