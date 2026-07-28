@@ -15,7 +15,7 @@ export default function Logo({ size = "sm", onClick, className = "", showInitial
     return (
       <button
         onClick={onClick}
-        className={`${dimensions} rounded-full bg-gradient-to-br from-[#b91c1c] via-[#ea580c] to-[#d4af37] flex items-center justify-center font-bold text-white text-lg transition-all hover:shadow-lg hover:shadow-[#ea580c]/50 ${className}`}
+        className={`${dimensions} rounded-2xl bg-gradient-to-br from-[#b91c1c] via-[#ea580c] to-[#d4af37] flex items-center justify-center font-bold text-white text-lg cursor-pointer transition-all hover:shadow-lg hover:shadow-[#ea580c]/50 ${className}`}
         aria-label="Home"
       >
         SP
@@ -26,7 +26,7 @@ export default function Logo({ size = "sm", onClick, className = "", showInitial
   return (
     <button
       onClick={onClick}
-      className={`${dimensions} relative rounded-full transition-all hover:shadow-lg hover:shadow-[#ea580c]/50 ${className}`}
+      className={`${dimensions} relative overflow-hidden rounded-2xl cursor-pointer transition-all hover:shadow-lg hover:shadow-[#ea580c]/50 ${className}`}
       aria-label="Home"
     >
       <Image

@@ -46,6 +46,24 @@ interface ParticleEffectProps {
  * <ParticleEffect count={30} color="purple" speed="normal" />
  */
 
+const colorMap = {
+  purple: "rgba(168, 85, 247, 0.6)",
+  cyan: "rgba(34, 211, 238, 0.6)",
+  pink: "rgba(236, 72, 153, 0.6)",
+};
+
+const speedMap = {
+  slow: 1,
+  normal: 2,
+  fast: 3,
+};
+
+const sizeMap = {
+  small: 2,
+  medium: 4,
+  large: 6,
+};
+
 export default function ParticleEffect({
   count = 20,
   color = "purple",
@@ -56,26 +74,7 @@ export default function ParticleEffect({
   const [particles, setParticles] = useState<Particle[]>([]);
   const [mounted, setMounted] = useState(false);
 
-  const colorMap = {
-    purple: "rgba(168, 85, 247, 0.6)",
-    cyan: "rgba(34, 211, 238, 0.6)",
-    pink: "rgba(236, 72, 153, 0.6)",
-  };
-
-  const speedMap = {
-    slow: 1,
-    normal: 2,
-    fast: 3,
-  };
-
-  const sizeMap = {
-    small: 2,
-    medium: 4,
-    large: 6,
-  };
-
   useEffect(() => {
-    // Gera partículas aleatórias
     const generateParticles: Particle[] = Array.from({ length: count }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
