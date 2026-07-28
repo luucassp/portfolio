@@ -7,14 +7,26 @@ interface LogoProps {
   showInitials?: boolean;
 }
 
-export default function Logo({ size = "sm", onClick, className = "" }: LogoProps) {
+export default function Logo({ size = "sm", onClick, className = "", showInitials = false }: LogoProps) {
   const isLarge = size === "lg";
   const dimensions = isLarge ? "w-32 h-32" : "w-12 h-12";
+
+  if (showInitials && size === "sm") {
+    return (
+      <button
+        onClick={onClick}
+        className={`${dimensions} rounded-2xl bg-gradient-to-br from-[#b91c1c] via-[#ea580c] to-[#d4af37] flex items-center justify-center font-bold text-white text-lg cursor-pointer transition-all hover:shadow-lg hover:shadow-[#ea580c]/50 ${className}`}
+        aria-label="Home"
+      >
+        SP
+      </button>
+    );
+  }
 
   return (
     <button
       onClick={onClick}
-      className={`${dimensions} relative overflow-hidden rounded-2xl cursor-pointer transition-all hover:shadow-lg hover:shadow-purple-500/50 ${className}`}
+      className={`${dimensions} relative overflow-hidden rounded-2xl cursor-pointer transition-all hover:shadow-lg hover:shadow-[#ea580c]/50 ${className}`}
       aria-label="Home"
     >
       <Image
