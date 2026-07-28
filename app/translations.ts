@@ -8,6 +8,8 @@ export const translations = {
     },
     hero: {
       greeting: "Olá, meu nome é",
+      badge: "Disponível para novos projetos",
+      tagline: "Fogo e Sangue",
       title: "Sergio L. Pereira",
       role: "Desenvolvedor Front-end",
       description:
@@ -68,6 +70,8 @@ export const translations = {
     },
     hero: {
       greeting: "Hi, my name is",
+      badge: "Available for new projects",
+      tagline: "Fire and Blood",
       title: "Sergio L. Pereira",
       role: "Front-end Developer",
       description:
