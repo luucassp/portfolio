@@ -30,7 +30,7 @@ export default function Logo({ size = "sm", onClick, className = "", showInitial
       aria-label="Home"
     >
       <Image
-        src="/logo para scrol.png"
+        src="/logo-slp.png"
         alt="Sergio L. Pereira"
         fill
         className="object-contain"
