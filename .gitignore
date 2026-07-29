@@ -41,3 +41,9 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# Assets de origem do hero (fora do build)
+assets-src/
+
+# Quadros gerados
+public/frames/
