@@ -120,10 +120,17 @@
   50% { opacity: 0.7; }
 }
 
+@keyframes name-ignite {
+  0% { opacity: 0; transform: translateY(10px) scale(0.98); filter: blur(6px); text-shadow: none; }
+  60% { filter: blur(0px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); text-shadow: 0 0 30px rgba(234, 88, 12, 0.5); }
+}
+
 .fire-glow-animation { animation: fire-glow 2.6s ease-in-out infinite; }
 .ember-flicker-animation { animation: ember-flicker 3s ease-in-out infinite; }
 .fade-in-animation { animation: fade-in-up 600ms ease-out forwards; }
 .pulse-glow-animation { animation: pulse-glow 2s ease-in-out infinite; }
+.name-ignite-animation { opacity: 0; animation: name-ignite 700ms ease-out forwards; }
 
 /* Gradient text: red → ember → gold */
 .text-fire-gradient {

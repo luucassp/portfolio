@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { translations } from "./translations";
 import Logo from "./components/Logo";
-import TypewriterText from "./components/TypewriterText";
 import { useScrollAnimation } from "./components/hooks/useScrollAnimation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -16,13 +15,6 @@ type Language = "pt" | "en";
 
 const cardBase =
   "bg-card/50 backdrop-blur-sm border-[var(--targaryen-gold)]/15 transition-all duration-300";
-
-const DownloadIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-  </svg>
-);
 
 export default function Home() {
   const [language, setLanguage] = useState<Language>("pt");
@@ -116,11 +108,18 @@ export default function Home() {
 
   const projects = [
     {
-      name: "Pokodex",
-      description: t.projects.pokodex,
-      url: "https://github.com/luucassp/Pokodex",
-      demo: "",
-      tags: ["React", "JavaScript", "CSS"],
+      name: "City Sightseeing Bike Tours",
+      description: t.projects.citySightseeing,
+      url: "https://github.com/luucassp/City-Sightseeing-Bike-Tours",
+      demo: "https://city-sightseeing-bike-tours.vercel.app",
+      tags: ["Next.js", "TypeScript", "Tailwind"],
+    },
+    {
+      name: "Traveland",
+      description: t.projects.traveland,
+      url: "https://github.com/luucassp/Traveland",
+      demo: "https://traveland-kappa.vercel.app",
+      tags: ["Next.js", "TypeScript", "i18n"],
     },
     {
       name: "Cosmic Drift",
@@ -130,17 +129,10 @@ export default function Home() {
       tags: ["JavaScript", "CSS"],
     },
     {
-      name: language === "pt" ? "Lista de Tarefas" : "Todo List",
-      description: t.projects.todoList,
-      url: "https://github.com/luucassp/lista-de-afazer",
-      demo: "",
-      tags: ["HTML", "CSS", "JavaScript"],
-    },
-    {
       name: language === "pt" ? "Calculadora IMC" : "BMI Calculator",
       description: t.projects.imc,
       url: "https://github.com/luucassp/IMC",
-      demo: "",
+      demo: "https://imc-neon.vercel.app",
       tags: ["HTML", "CSS", "JavaScript"],
     },
   ];
@@ -179,29 +171,33 @@ export default function Home() {
   return (
     <div className="min-h-screen text-foreground scroll-smooth">
       {/* Navbar */}
-      <nav className="fixed top-0 w-full z-50 bg-background/60 backdrop-blur-md border-b border-[var(--targaryen-gold)]/10">
+      <nav className="fixed top-0 w-full z-50 bg-background/60 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Logo size="sm" onClick={scrollToHero} showInitials={isScrolled} />
+          <Logo size="sm" onClick={scrollToHero} />
 
-          {/* Desktop links */}
-          <div className="hidden sm:flex gap-6 text-sm text-muted-foreground items-center">
-            {navLinks.map((item) => (
-              <a key={item.href} href={item.href} className="hover:text-accent transition-colors">
-                {item.label}
-              </a>
-            ))}
-            <div className="flex gap-1 ml-2 pl-3 border-l border-[var(--targaryen-gold)]/15 items-center">
-              {langButton("pt")}
-              {langButton("en")}
-              <Button asChild size="sm" variant="outline"
-                className="ml-2 border-accent/40 text-accent hover:bg-accent/10 hover:text-accent">
-                <a href="/cv.pdf" download>
-                  <DownloadIcon className="w-3 h-3" />
-                  {t.nav.downloadCV}
-                </a>
-              </Button>
-            </div>
-          </div>
+          {/* Desktop links — barra horizontal no topo */}
+          <AnimatePresence>
+            {!isScrolled && (
+              <motion.div
+                key="nav-inline"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="hidden sm:flex gap-6 text-sm text-muted-foreground items-center"
+              >
+                {navLinks.map((item) => (
+                  <a key={item.href} href={item.href} className="hover:text-accent transition-colors">
+                    {item.label}
+                  </a>
+                ))}
+                <div className="flex gap-1 ml-2 pl-3 border-l border-[var(--targaryen-gold)]/15 items-center">
+                  {langButton("pt")}
+                  {langButton("en")}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Hamburger — mobile only */}
           <button
@@ -238,23 +234,53 @@ export default function Home() {
                     {item.label}
                   </a>
                 ))}
-                <div className="pt-4 flex items-center justify-between">
-                  <div className="flex gap-1">
-                    {langButton("pt", () => setIsMobileMenuOpen(false))}
-                    {langButton("en", () => setIsMobileMenuOpen(false))}
-                  </div>
-                  <Button asChild size="sm" onClick={() => setIsMobileMenuOpen(false)}>
-                    <a href="/cv.pdf" download>
-                      <DownloadIcon />
-                      {t.nav.downloadCV}
-                    </a>
-                  </Button>
+                <div className="pt-4 flex items-center gap-1">
+                  {langButton("pt", () => setIsMobileMenuOpen(false))}
+                  {langButton("en", () => setIsMobileMenuOpen(false))}
                 </div>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </nav>
+
+      {/* Menu flutuante — canto superior direito, aparece ao rolar, monta de baixo pra cima */}
+      <AnimatePresence>
+        {isScrolled && (
+          <div className="hidden sm:flex flex-col items-end gap-2 fixed top-4 right-6 z-50">
+            {[
+              ...navLinks.map((item) => ({
+                key: item.href,
+                content: (
+                  <a href={item.href} className="hover:text-accent transition-colors">
+                    {item.label}
+                  </a>
+                ),
+              })),
+              {
+                key: "controls",
+                content: (
+                  <div className="flex items-center gap-1">
+                    {langButton("pt")}
+                    {langButton("en")}
+                  </div>
+                ),
+              },
+            ].map((item, i, arr) => (
+              <motion.div
+                key={item.key}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 24 }}
+                transition={{ delay: (arr.length - 1 - i) * 0.06, duration: 0.25, ease: "easeOut" }}
+                className="px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-md border border-[var(--targaryen-gold)]/15 text-sm text-muted-foreground shadow-sm"
+              >
+                {item.content}
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Hero */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center px-6 pt-20 overflow-hidden">
@@ -277,8 +303,17 @@ export default function Home() {
             {t.hero.tagline}
           </p>
 
-          <h1 className="text-5xl md:text-7xl font-bold mb-4 leading-tight font-[family-name:var(--font-cinzel)]">
-            <TypewriterText key={heroKey} lines={typewriterLines} speed={70} startDelay={400} />
+          {/* Delay casa com o pico do sopro de fogo do DragonBreath (PEAK_FRAME / fps ≈ 500ms) */}
+          <h1 key={heroKey} className="text-5xl md:text-7xl font-bold mb-4 leading-tight font-[family-name:var(--font-cinzel)]">
+            {typewriterLines.map((line, i) => (
+              <span
+                key={i}
+                className={`block name-ignite-animation ${line.className ?? ""}`}
+                style={{ animationDelay: `${450 + i * 150}ms` }}
+              >
+                {line.text}
+              </span>
+            ))}
           </h1>
 
           <h2 className="text-xl md:text-2xl text-muted-foreground font-medium mb-6">
@@ -296,12 +331,6 @@ export default function Home() {
             <Button asChild size="lg" variant="outline"
               className="border-accent/40 text-accent hover:bg-accent/10 hover:text-accent">
               <a href="#contato">{t.hero.contact}</a>
-            </Button>
-            <Button asChild size="lg" variant="ghost" className="text-accent hover:bg-accent/10 hover:text-accent">
-              <a href="/cv.pdf" download>
-                <DownloadIcon />
-                {t.nav.downloadCV}
-              </a>
             </Button>
           </div>
         </div>
