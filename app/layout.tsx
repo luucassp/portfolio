@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Cinzel } from "next/font/google";
 import "./globals.css";
 import EmberBackground from "./components/EmberBackground";
-import DragonBackground from "@/components/DragonBackground";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +36,6 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <EmberBackground />
-        <DragonBackground mode="scroll" scrollTarget="document" className="fixed inset-0 z-0" />
         <div className="relative z-10">
           {children}
         </div>
