@@ -86,7 +86,11 @@ export default function DragonBreath({
   cover = false,
 }: DragonBreathProps) {
   const [frame, setFrame] = useState(0);
-  const [reduced, setReduced] = useState(false);
+  // inicializador preguiçoso: lê matchMedia já na primeira renderização,
+  // evitando uma corrida onde o loop chega a iniciar antes do sync rodar.
+  const [reduced, setReduced] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  );
   const [hovering, setHovering] = useState(false);
   const [visible, setVisible] = useState(mode !== 'loop');
   const hostRef = useRef<HTMLDivElement>(null);

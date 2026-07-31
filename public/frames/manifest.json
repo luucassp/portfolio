@@ -1,0 +1,18 @@
+{
+  "loop": "simple",
+  "generatedAt": "2026-07-30T21:32:14.775Z",
+  "variants": {
+    "desktop": {
+      "count": 362,
+      "width": 640,
+      "height": 360,
+      "fps": 15
+    },
+    "mobile": {
+      "count": 241,
+      "width": 400,
+      "height": 225,
+      "fps": 10
+    }
+  }
+}

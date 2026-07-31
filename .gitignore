@@ -41,3 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# hero dragon source assets (large, not for build)
+/assets-src/
