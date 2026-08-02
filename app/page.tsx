@@ -1,15 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { translations } from "./translations";
-import Logo from "./components/Logo";
+import SiteHeader from "./components/SiteHeader";
 import { useScrollAnimation } from "./components/hooks/useScrollAnimation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import Hero from "@/components/ui/animated-shader-hero";
 
 type Language = "pt" | "en";
 
@@ -18,56 +19,16 @@ const cardBase =
 
 export default function Home() {
   const [language, setLanguage] = useState<Language>("pt");
-  const [isScrolled, setIsScrolled] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const { ref: aboutRef, isVisible: aboutVisible } = useScrollAnimation({ threshold: 0.1 });
   const { ref: skillsRef, isVisible: skillsVisible } = useScrollAnimation({ threshold: 0.1 });
   const { ref: projectsRef, isVisible: projectsVisible } = useScrollAnimation({ threshold: 0.08 });
   const { ref: contactRef, isVisible: contactVisible } = useScrollAnimation({ threshold: 0.1 });
 
-  const [heroKey, setHeroKey] = useState(0);
-  const heroRef = useRef<HTMLElement>(null);
-  const heroWasHidden = useRef(false);
-
   useEffect(() => {
     const savedLang = localStorage.getItem("language") as Language | null;
     if (savedLang) setLanguage(savedLang);
-
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
-      setIsMobileMenuOpen(false);
-    };
-
-    const handleResize = () => {
-      if (window.innerWidth >= 640) setIsMobileMenuOpen(false);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    window.addEventListener("resize", handleResize);
-
-    // Reinicia a digitação ao voltar para o hero
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) {
-          heroWasHidden.current = true;
-        } else if (heroWasHidden.current) {
-          heroWasHidden.current = false;
-          setHeroKey((k) => k + 1);
-        }
-      },
-      { threshold: 0.4 }
-    );
-
-    const el = heroRef.current;
-    if (el) observer.observe(el);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
-      if (el) observer.unobserve(el);
-    };
   }, []);
 
   useEffect(() => {
@@ -86,14 +47,6 @@ export default function Home() {
   const scrollToHero = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   const t = translations[language];
-
-  const typewriterLines = useMemo(
-    () => [
-      { text: "Sergio L." },
-      { text: "Pereira", className: "text-fire-gradient" },
-    ],
-    []
-  );
 
   const skills = ["JavaScript", "TypeScript", "HTML5", "CSS3", "React", "Next.js", "Git", "GitHub"];
 
@@ -144,23 +97,6 @@ export default function Home() {
     { href: "#contato", label: t.nav.contato },
   ];
 
-  const langButton = (lang: Language, onDone?: () => void) => (
-    <button
-      onClick={() => {
-        changeLanguage(lang);
-        onDone?.();
-      }}
-      className={cn(
-        "px-2.5 py-1 rounded text-xs font-medium transition-colors cursor-pointer",
-        language === lang
-          ? "bg-primary text-primary-foreground"
-          : "text-muted-foreground hover:text-foreground"
-      )}
-    >
-      {lang.toUpperCase()}
-    </button>
-  );
-
   const sectionLabel = (num: string, title: string) => (
     <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center font-[family-name:var(--font-cinzel)]">
       <span className="text-fire-gradient font-mono text-base block mb-2 tracking-widest">{num}</span>
@@ -170,171 +106,32 @@ export default function Home() {
 
   return (
     <div className="min-h-screen text-foreground scroll-smooth">
-      {/* Navbar */}
-      <nav className="fixed top-0 w-full z-50 bg-background/60 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Logo size="sm" onClick={scrollToHero} />
-
-          {/* Desktop links — barra horizontal no topo */}
-          <AnimatePresence>
-            {!isScrolled && (
-              <motion.div
-                key="nav-inline"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="hidden sm:flex gap-6 text-sm text-muted-foreground items-center"
-              >
-                {navLinks.map((item) => (
-                  <a key={item.href} href={item.href} className="hover:text-accent transition-colors">
-                    {item.label}
-                  </a>
-                ))}
-                <div className="flex gap-1 ml-2 pl-3 border-l border-[var(--targaryen-gold)]/15 items-center">
-                  {langButton("pt")}
-                  {langButton("en")}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Hamburger — mobile only */}
-          <button
-            className="sm:hidden p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg cursor-pointer"
-            onClick={() => setIsMobileMenuOpen((v) => !v)}
-            aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
-            aria-expanded={isMobileMenuOpen}
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-            </svg>
-          </button>
-        </div>
-
-        {/* Mobile menu panel */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.22, ease: "easeInOut" }}
-              className="sm:hidden overflow-hidden border-t border-[var(--targaryen-gold)]/10 bg-background/95 backdrop-blur-md"
-            >
-              <div className="px-6 py-4 flex flex-col gap-0">
-                {navLinks.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="py-3 text-muted-foreground hover:text-accent transition-colors border-b border-[var(--targaryen-gold)]/10 text-sm"
-                  >
-                    {item.label}
-                  </a>
-                ))}
-                <div className="pt-4 flex items-center gap-1">
-                  {langButton("pt", () => setIsMobileMenuOpen(false))}
-                  {langButton("en", () => setIsMobileMenuOpen(false))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
-
-      {/* Menu flutuante — canto superior direito, aparece ao rolar, monta de baixo pra cima */}
-      <AnimatePresence>
-        {isScrolled && (
-          <div className="hidden sm:flex flex-col items-end gap-2 fixed top-4 right-6 z-50">
-            {[
-              ...navLinks.map((item) => ({
-                key: item.href,
-                content: (
-                  <a href={item.href} className="hover:text-accent transition-colors">
-                    {item.label}
-                  </a>
-                ),
-              })),
-              {
-                key: "controls",
-                content: (
-                  <div className="flex items-center gap-1">
-                    {langButton("pt")}
-                    {langButton("en")}
-                  </div>
-                ),
-              },
-            ].map((item, i, arr) => (
-              <motion.div
-                key={item.key}
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 24 }}
-                transition={{ delay: (arr.length - 1 - i) * 0.06, duration: 0.25, ease: "easeOut" }}
-                className="px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-md border border-[var(--targaryen-gold)]/15 text-sm text-muted-foreground shadow-sm"
-              >
-                {item.content}
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </AnimatePresence>
+      {/* Header */}
+      <SiteHeader
+        language={language}
+        onLanguageChange={changeLanguage}
+        navLinks={navLinks}
+        onLogoClick={scrollToHero}
+      />
 
       {/* Hero */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center px-6 pt-20 overflow-hidden">
-        <div className="max-w-3xl text-center relative z-10">
-          <div className="mb-10 flex justify-center">
-            <Logo size="lg" onClick={scrollToHero} />
-          </div>
-
-          <div className="flex justify-center mb-6">
-            <Badge variant="outline" className="border-accent/40 text-accent bg-accent/5 gap-2 px-3 py-1">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
-              </span>
-              {t.hero.badge}
-            </Badge>
-          </div>
-
-          <p className="text-accent font-mono mb-4 text-sm tracking-[0.3em] uppercase ember-flicker-animation">
-            {t.hero.tagline}
-          </p>
-
-          {/* Delay casa com o pico do sopro de fogo do DragonBreath (PEAK_FRAME / fps ≈ 500ms) */}
-          <h1 key={heroKey} className="text-5xl md:text-7xl font-bold mb-4 leading-tight font-[family-name:var(--font-cinzel)]">
-            {typewriterLines.map((line, i) => (
-              <span
-                key={i}
-                className={`block name-ignite-animation ${line.className ?? ""}`}
-                style={{ animationDelay: `${450 + i * 150}ms` }}
-              >
-                {line.text}
-              </span>
-            ))}
-          </h1>
-
-          <h2 className="text-xl md:text-2xl text-muted-foreground font-medium mb-6">
-            {t.hero.role}
-          </h2>
-
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto mb-10 leading-relaxed">
-            {t.hero.description}
-          </p>
-
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Button asChild size="lg" className="fire-glow-animation">
-              <a href="#projetos">{t.hero.viewProjects}</a>
-            </Button>
-            <Button asChild size="lg" variant="outline"
-              className="border-accent/40 text-accent hover:bg-accent/10 hover:text-accent">
-              <a href="#contato">{t.hero.contact}</a>
-            </Button>
-          </div>
-        </div>
-      </section>
+      <Hero
+        trustBadge={{ text: t.hero.badge }}
+        headline={{ line1: "Sergio L.", line2: "Pereira" }}
+        subtitle={`${t.hero.tagline} — ${t.hero.role}. ${t.hero.description}`}
+        buttons={{
+          primary: {
+            text: t.hero.viewProjects,
+            onClick: () =>
+              document.getElementById("projetos")?.scrollIntoView({ behavior: "smooth" }),
+          },
+          secondary: {
+            text: t.hero.contact,
+            onClick: () =>
+              document.getElementById("contato")?.scrollIntoView({ behavior: "smooth" }),
+          },
+        }}
+      />
 
       {/* Sobre */}
       <section id="sobre" className="py-24 px-6">
@@ -537,9 +334,6 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="py-8 text-center text-muted-foreground/70 text-sm border-t border-[var(--targaryen-gold)]/10">
-        <p className="font-[family-name:var(--font-cinzel)] text-accent/70 text-xs tracking-[0.3em] uppercase mb-2">
-          {t.hero.tagline}
-        </p>
         <p>
           {t.footer.developed} <span className="text-fire-gradient font-semibold">Sergio L. Pereira</span> · 2025
         </p>
