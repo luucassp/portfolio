@@ -15,7 +15,7 @@ import Hero from "@/components/ui/animated-shader-hero";
 type Language = "pt" | "en";
 
 const cardBase =
-  "bg-card/50 backdrop-blur-sm border-[var(--targaryen-gold)]/15 transition-all duration-300";
+  "bg-card/75 backdrop-blur-md border-[var(--targaryen-gold)]/15 transition-all duration-300";
 
 export default function Home() {
   const [language, setLanguage] = useState<Language>("pt");
@@ -118,7 +118,7 @@ export default function Home() {
       <Hero
         trustBadge={{ text: t.hero.badge }}
         headline={{ line1: "Sergio L.", line2: "Pereira" }}
-        subtitle={`${t.hero.tagline} — ${t.hero.role}. ${t.hero.description}`}
+        subtitle={`${t.hero.role}. ${t.hero.description}`}
         buttons={{
           primary: {
             text: t.hero.viewProjects,
@@ -208,7 +208,7 @@ export default function Home() {
                     <p className="font-medium text-foreground group-hover:text-accent transition-colors">
                       {skill}
                     </p>
-                    <p className="text-muted-foreground/60 text-xs mt-2 group-hover:text-muted-foreground transition-colors">
+                    <p className="text-muted-foreground/80 text-xs mt-2 group-hover:text-muted-foreground transition-colors">
                       {t.skills.clickHint}
                     </p>
                   </div>
@@ -333,7 +333,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 text-center text-muted-foreground/70 text-sm border-t border-[var(--targaryen-gold)]/10">
+      <footer className="py-8 text-center text-muted-foreground/85 text-sm border-t border-[var(--targaryen-gold)]/10">
         <p>
           {t.footer.developed} <span className="text-fire-gradient font-semibold">Sergio L. Pereira</span> · 2025
         </p>
