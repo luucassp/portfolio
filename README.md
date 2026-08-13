@@ -4,6 +4,8 @@
 
 🔗 **Deploy:** [portfolio-ashy-six-24.vercel.app](https://portfolio-ashy-six-24.vercel.app)
 
+[![Portfólio](docs/screenshot.png)](https://portfolio-ashy-six-24.vercel.app)
+
 ---
 
 ## ✨ Funcionalidades
